@@ -283,7 +283,12 @@ async function handleGoogleSignIn() {
     showFeedback("Signed in with Google! Welcome.", "success");
   } catch (error) {
     console.error("Google sign-in error:", error);
-    if (error.code !== "auth/popup-closed-by-user") {
+    if (error.code === "auth/unauthorized-domain") {
+      showFeedback(
+        `Domain "${window.location.hostname}" is not authorized. Please add "${window.location.hostname}" in Firebase Console > Authentication > Settings > Authorized domains.`,
+        "error"
+      );
+    } else if (error.code !== "auth/popup-closed-by-user") {
       showFeedback(error.message || "Could not sign in with Google.", "error");
     }
   }
