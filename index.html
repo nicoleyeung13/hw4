@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Question For The Next Person</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="journal-container">
+    <!-- Header -->
+    <header class="journal-header">
+      <span class="journal-badge">Shared Journal</span>
+      <h1 class="journal-title">One Question For The Next Person</h1>
+    </header>
+
+    <main class="journal-main">
+      <!-- Current Question Card (Always visible) -->
+      <section class="card current-question-card" aria-labelledby="current-q-label">
+        <div class="card-eyebrow" id="current-q-label">The question right now</div>
+        <blockquote class="current-question-text" id="currentQuestionDisplay">
+          <!-- Populated by JavaScript -->
+        </blockquote>
+        <div class="card-footnote" id="currentQuestionOrigin">
+          <!-- Shows who left this question or if it's the starting prompt -->
+        </div>
+      </section>
+
+      <!-- Turn Submission Form -->
+      <section class="card form-card" aria-labelledby="form-heading">
+        <h2 id="form-heading" class="section-title">Your turn</h2>
+        <p class="section-description">
+          Take your time. Fill in all three fields to pass the journal along.
+        </p>
+
+        <form id="turnForm" novalidate>
+          <div class="form-group">
+            <label for="nickname" class="form-label">
+              Nickname
+              <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="text"
+              id="nickname"
+              name="nickname"
+              class="form-input"
+              placeholder="e.g. Maya, Sam, or your initials"
+              maxlength="40"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="answer" class="form-label">
+              Your answer
+              <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="answer"
+              name="answer"
+              class="form-textarea"
+              rows="4"
+              placeholder="Write whatever comes to mind..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="nextQuestion" class="form-label">
+              A question for the next person
+              <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="nextQuestion"
+              name="nextQuestion"
+              class="form-textarea"
+              rows="3"
+              placeholder="What do you want to ask whoever visits next?"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Google Authentication Interface (Above Pass It On) -->
+          <div class="form-auth-section" id="authBar">
+            <div id="authSignedOut" class="auth-state">
+              <span class="auth-prompt-text">Sign in to attach your name and photo:</span>
+              <button type="button" id="googleSignInBtn" class="btn-auth-google" aria-label="Sign in with Google">
+                <svg class="google-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                </svg>
+                <span>Sign in with Google</span>
+              </button>
+            </div>
+
+            <div id="authSignedIn" class="auth-state" style="display: none;">
+              <span class="auth-signedin-label">Writing as:</span>
+              <div class="user-profile">
+                <img id="userAvatar" class="user-avatar" src="" alt="User profile" />
+                <span id="userName" class="user-name"></span>
+              </div>
+              <button type="button" id="signOutBtn" class="btn-auth-signout">Sign out</button>
+            </div>
+          </div>
+
+          <div id="formFeedback" class="form-feedback" role="alert" aria-live="polite"></div>
+
+          <button type="submit" id="submitBtn" class="btn btn-primary">
+            Pass it on
+          </button>
+        </form>
+      </section>
+
+      <!-- Journal History Section -->
+      <section class="card history-card" aria-labelledby="history-heading">
+        <div class="history-header">
+          <div>
+            <h2 id="history-heading" class="section-title">Pages turned</h2>
+            <p class="section-description">Read past responses one entry at a time.</p>
+          </div>
+          <div class="history-counter" id="historyCounter" aria-live="polite">
+            <!-- Populated by JavaScript, e.g. "Entry 1 of 4" -->
+          </div>
+        </div>
+
+        <!-- Single History Entry View -->
+        <article class="history-entry" id="historyEntryContainer">
+          <!-- Populated by JavaScript -->
+        </article>
+
+        <!-- Navigation Controls -->
+        <nav class="history-navigation" aria-label="Journal history pagination">
+          <button type="button" id="prevBtn" class="btn btn-secondary" aria-label="View previous entry">
+            &larr; Previous
+          </button>
+          <button type="button" id="nextBtn" class="btn btn-secondary" aria-label="View next entry">
+            Next &rarr;
+          </button>
+        </nav>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="journal-footer">
+      <p>Leave a piece of your day behind.</p>
+    </footer>
+  </div>
+
+  <!-- Firebase App, Auth, & Cloud Firestore SDKs (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
+
